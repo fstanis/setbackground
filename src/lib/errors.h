@@ -1,0 +1,14 @@
+#ifndef __SETBACKGROUND_ERROR_H__
+#define __SETBACKGROUND_ERROR_H__
+
+enum _error {
+    E_SUCCESS = 0,
+    E_INVALID_PATH = 1,
+    E_UNSUPPORTED_DESKTOP_ENVIRONMENT = 2,
+    E_KDE_NO_PLASMASHELL = 3,
+    E_KDE_UNSUPPORTED_VERSION = 4,
+    E_KDE_FAIL = 5,
+    E_XFCE_FAIL = 6
+  };
+
+#endif /* __SETBACKGROUND_ERROR_H__ */
