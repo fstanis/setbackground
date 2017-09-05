@@ -5,8 +5,6 @@
 #include "common.h"
 #include "platforms.h"
 
-const char* DESKTOP_XFCE = "XFCE";
-
 int set_background_linux(const char* path) {
   if (!file_exists(path)) {
     return E_INVALID_PATH;
@@ -16,12 +14,22 @@ int set_background_linux(const char* path) {
     return E_INVALID_PATH;
   }
 
-  gchar* desktop_env = get_desktop_environment();
+  gchar* desktop = get_desktop_environment();
   int result = E_UNSUPPORTED_DESKTOP_ENVIRONMENT;
-  if (g_strcmp0(desktop_env, DESKTOP_XFCE) == 0) {
+  if (is_gnome(desktop)) {
+    result = set_background_gnome(real_path);
+  } else if (is_kde(desktop)) {
+    result = set_background_kde(real_path);
+  } else if (is_xfce(desktop)) {
     result = set_background_xfce(real_path);
+  } else if (is_cinnamon(desktop)) {
+    result = set_background_cinnamon(real_path);
+  } else if (is_mate(desktop)) {
+    result = set_background_mate(real_path);
+  } else if (is_deepin(desktop)) {
+    result = set_background_deepin(real_path);
   }
-  g_free(desktop_env);
+  g_free(desktop);
   g_free(real_path);  
   return result;
 }

@@ -6,7 +6,7 @@
 
 #include "errors.h"
 
-gboolean dconf_write_property(const gchar* property, const gchar* value);
+gboolean dconf_write(const gchar* key, const gchar* value);
 gboolean dbus_session_send_message(DBusMessage* msg, DBusError* err);
 gboolean xfconf_has_property(const gchar* channel, const gchar* property);
 gboolean xfconf_write_property(const gchar* channel, const gchar* property,

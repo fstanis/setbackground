@@ -8,7 +8,11 @@ enum _error {
     E_KDE_NO_PLASMASHELL = 3,
     E_KDE_UNSUPPORTED_VERSION = 4,
     E_KDE_FAIL = 5,
-    E_XFCE_FAIL = 6
+    E_XFCE_FAIL = 6,
+    E_MATE_FAIL = 7,
+    E_CINNAMON_FAIL = 8,
+    E_DEEPIN_FAIL = 9,
+    E_GNOME_FAIL = 10,
   };
 
 #endif /* __SETBACKGROUND_ERROR_H__ */

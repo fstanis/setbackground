@@ -1,19 +1,25 @@
-#include <string.h>
 #include <glib.h>
+#include <string.h>
 
 #include "common.h"
 
-const char* SCRIPT_BASE =
+static const char* DESKTOP = "KDE";
+
+gboolean is_kde(const gchar* desktop) {
+  return g_strcmp0(desktop, DESKTOP) == 0;
+}
+
+static const char* SCRIPT_BASE =
     "desktops().forEach(function(d) {"
     "d.wallpaperPlugin = 'org.kde.image';"
     "d.currentConfigGroup = ['Wallpaper', 'org.kde.image', 'General'];"
     "d.writeConfig('Image', '%s');"
     "});";
 
-const char* PLASMASHELL_BUS = "org.kde.plasmashell";
-const char* PLASMASHELL_PATH = "/PlasmaShell";
-const char* PLASMASHELL_IFACE = "org.kde.PlasmaShell";
-const char* PLASMASHELL_METHOD = "evaluateScript";
+static const char* PLASMASHELL_BUS = "org.kde.plasmashell";
+static const char* PLASMASHELL_PATH = "/PlasmaShell";
+static const char* PLASMASHELL_IFACE = "org.kde.PlasmaShell";
+static const char* PLASMASHELL_METHOD = "evaluateScript";
 
 DBusMessage* create_message(gchar** script) {
   DBusMessage* msg = dbus_message_new_method_call(
@@ -39,6 +45,17 @@ gchar* create_script(const gchar* path) {
   return script;
 }
 
+int handle_error(DBusError* error) {
+  int result = E_KDE_FAIL;
+  if (dbus_error_has_name(error, DBUS_ERROR_SERVICE_UNKNOWN)) {
+    result = E_KDE_NO_PLASMASHELL;
+  } else if (dbus_error_has_name(error, DBUS_ERROR_UNKNOWN_METHOD)) {
+    result = E_KDE_UNSUPPORTED_VERSION;
+  }
+  dbus_error_free(error);
+  return result;
+}
+
 int set_background_kde(const gchar* path) {
   int result = E_KDE_FAIL;
 
@@ -56,13 +73,9 @@ int set_background_kde(const gchar* path) {
     }
     dbus_message_unref(msg);
   }
+
   if (dbus_error_is_set(&error)) {
-    if (dbus_error_has_name(&error, DBUS_ERROR_SERVICE_UNKNOWN)) {
-      result = E_KDE_NO_PLASMASHELL;
-    } else if (dbus_error_has_name(&error, DBUS_ERROR_UNKNOWN_METHOD)) {
-      result = E_KDE_UNSUPPORTED_VERSION;
-    }
-    dbus_error_free(&error);
+    result = handle_error(&error);
   }
   return result;
 }

@@ -5,13 +5,14 @@
 #include <dbus/dbus.h>
 #include <dconf.h>
 #include <glib.h>
-#include <xfconf/xfconf.h>
 
-gboolean dconf_write_property(const gchar* property, const gchar* value) {
+#include "xfconfdl.h"
+
+gboolean dconf_write(const gchar* key, const gchar* value) {
   DConfClient* client = dconf_client_new();
   GVariant* variant = g_variant_new_string(value);
   gboolean result =
-      dconf_client_write_sync(client, property, variant, NULL, NULL, NULL);
+      dconf_client_write_sync(client, key, variant, NULL, NULL, NULL);
   g_object_unref(client);
   return result;
 }
@@ -32,21 +33,8 @@ gboolean dbus_session_send_message(DBusMessage* msg, DBusError* err) {
   return FALSE;
 }
 
-gboolean xfconf_init_if_needed() {
-  static gboolean has_init = FALSE;
-
-  if (has_init) {
-    return TRUE;
-  }
-  if (xfconf_init(NULL)) {
-    has_init = TRUE;
-    return TRUE;
-  }
-  return FALSE;
-}
-
 gboolean xfconf_has_property(const gchar* channel, const gchar* property) {
-  if (!xfconf_init_if_needed()) {
+  if (!xfconf_try_init()) {
     return FALSE;
   }
   XfconfChannel* chan = xfconf_channel_get(channel);
@@ -58,7 +46,7 @@ gboolean xfconf_has_property(const gchar* channel, const gchar* property) {
 
 gboolean xfconf_write_property(const gchar* channel, const gchar* property,
                                const gchar* value) {
-  if (!xfconf_init_if_needed()) {
+  if (!xfconf_try_init()) {
     return FALSE;
   }
   XfconfChannel* chan = xfconf_channel_get(channel);

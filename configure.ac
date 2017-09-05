@@ -22,6 +22,8 @@ PKG_CHECK_MODULES([GLIB], [glib-2.0])
 PKG_CHECK_MODULES([XFCONF], [libxfconf-0])
 PKG_CHECK_MODULES([DCONF], [dconf])
 PKG_CHECK_MODULES([DBUS], [dbus-1])
+AC_CHECK_LIB([dl], [dlsym], [DL_LIBS=-ldl])
+AC_SUBST(DL_LIBS)
 
 # Checks for header files.
 AC_HEADER_STDC
