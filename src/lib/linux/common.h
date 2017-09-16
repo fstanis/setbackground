@@ -1,5 +1,5 @@
-#ifndef __SETBACKGROUND_COMMON_H__
-#define __SETBACKGROUND_COMMON_H__
+#ifndef __SETBACKGROUND_LINUX_COMMON_H__
+#define __SETBACKGROUND_LINUX_COMMON_H__
 
 #include <dbus/dbus.h>
 #include <glib.h>
@@ -17,4 +17,4 @@ gchar* get_desktop_environment();
 gboolean file_exists(const gchar* path);
 gchar* get_real_path(const gchar* path);
 
-#endif /* __SETBACKGROUND_COMMON_H__ */
+#endif /* __SETBACKGROUND_LINUX_COMMON_H__ */

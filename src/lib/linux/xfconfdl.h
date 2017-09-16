@@ -1,5 +1,5 @@
-#ifndef __SETBACKGROUND_XFCONFDL_H__
-#define __SETBACKGROUND_XFCONFDL_H__
+#ifndef __SETBACKGROUND_LINUX_XFCONFDL_H__
+#define __SETBACKGROUND_LINUX_XFCONFDL_H__
 
 #include <glib.h>
 
@@ -12,4 +12,4 @@ extern XfconfChannel* (*xfconf_channel_get)(const gchar *channel_name);
 extern gboolean (*xfconf_channel_has_property)(XfconfChannel *channel, const gchar *property);
 extern gboolean (*xfconf_channel_set_string)(XfconfChannel *channel, const gchar *property, const gchar *value);
 
-#endif /* __SETBACKGROUND_XFCONFDL_H__ */
+#endif /* __SETBACKGROUND_LINUX_XFCONFDL_H__ */
