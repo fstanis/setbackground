@@ -8,9 +8,6 @@
 
 gboolean dconf_write(const gchar* key, const gchar* value);
 gboolean dbus_session_send_message(DBusMessage* msg, DBusError* err);
-gboolean xfconf_has_property(const gchar* channel, const gchar* property);
-gboolean xfconf_write_property(const gchar* channel, const gchar* property,
-                               const gchar* value);
 
 gchar* to_file_uri_path(const gchar* path);
 gchar* get_desktop_environment();

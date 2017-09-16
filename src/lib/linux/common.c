@@ -33,29 +33,6 @@ gboolean dbus_session_send_message(DBusMessage* msg, DBusError* err) {
   return FALSE;
 }
 
-gboolean xfconf_has_property(const gchar* channel, const gchar* property) {
-  if (!xfconf_try_init()) {
-    return FALSE;
-  }
-  XfconfChannel* chan = xfconf_channel_get(channel);
-  if (chan) {
-    return xfconf_channel_has_property(chan, property);
-  }
-  return FALSE;
-}
-
-gboolean xfconf_write_property(const gchar* channel, const gchar* property,
-                               const gchar* value) {
-  if (!xfconf_try_init()) {
-    return FALSE;
-  }
-  XfconfChannel* chan = xfconf_channel_get(channel);
-  if (chan) {
-    return xfconf_channel_set_string(chan, property, value);
-  }
-  return FALSE;
-}
-
 gchar* to_file_uri_path(const gchar* path) {
   static const gchar* base = "file://%s";
   return g_strdup_printf(base, path);
