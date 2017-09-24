@@ -5,6 +5,7 @@
 #include <dbus/dbus.h>
 #include <dconf.h>
 #include <glib.h>
+#include <glob.h>
 
 #include "xfconfdl.h"
 
@@ -56,4 +57,53 @@ gchar* get_real_path(const gchar* path) {
     return NULL;
   }
   return g_strdup(pathTemp);
+}
+
+__pid_t find_pid_for_exe_path(const gchar* path) {
+  GDir* proc = g_dir_open("/proc", 0, NULL);
+  if (!proc) {
+    return 0;
+  }
+
+  __pid_t result = 0;
+  const gchar* filename;
+
+  while ((filename = g_dir_read_name(proc)) && result == 0) {
+    int pid = atoi(filename);
+    if (pid > 0) {
+      gchar* proc_exe = g_strdup_printf("/proc/%d/exe", pid);
+      gchar* exe_path = get_real_path(proc_exe);
+      g_free(proc_exe);
+      if (g_strcmp0(exe_path, path) == 0) {
+        result = pid;
+      }
+      g_free(exe_path);
+    }
+  }
+
+  g_dir_close(proc);
+
+  return result;
+}
+
+#define MAX_GLOB_RESULTS 50
+
+gchar** glob_path(const gchar* path) {
+  static gchar* files[MAX_GLOB_RESULTS];
+
+  glob_t results;
+  if (glob(path, GLOB_NOSORT, NULL, &results) != 0) {
+    return NULL;
+  }
+  gchar** result = NULL;
+  if (results.gl_pathc < MAX_GLOB_RESULTS) {
+    for (gsize i = 0; i < results.gl_pathc; i++) {
+      files[i] = results.gl_pathv[i];
+    }
+    files[results.gl_pathc] = NULL;
+    result = g_strdupv(files);
+  }
+  globfree(&results);
+
+  return result;
 }

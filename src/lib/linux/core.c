@@ -28,6 +28,8 @@ int set_background_linux(const char* path) {
     result = set_background_mate(real_path);
   } else if (is_deepin(desktop)) {
     result = set_background_deepin(real_path);
+  } else if (is_lxde(desktop)) {
+    result = set_background_lxde(real_path);
   }
   g_free(desktop);
   g_free(real_path);  

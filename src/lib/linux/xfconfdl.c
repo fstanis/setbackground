@@ -9,6 +9,8 @@ XfconfChannel* (*xfconf_channel_get)(const gchar *channel_name) = NULL;
 gboolean (*xfconf_channel_has_property)(XfconfChannel *channel, const gchar *property) = NULL;
 gboolean (*xfconf_channel_set_string)(XfconfChannel *channel, const gchar *property, const gchar *value) = NULL;
 
+// We load xfconf dynamically, to avoid having it a dependency on systems not
+// running XFCE.
 gboolean libxfconf_try_load() {
   static void* libxfconf = NULL;
   if (libxfconf) {

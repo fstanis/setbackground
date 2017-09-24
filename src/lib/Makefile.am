@@ -8,4 +8,4 @@ include_HEADERS = setbackground.h
 
 libsetbackground_a_SOURCES = setbackground.c errors.h
 libsetbackground_a_SOURCES += linux/core.c linux/common.c linux/xfconfdl.c linux/core.h linux/common.h linux/xfconf.h
-libsetbackground_a_SOURCES += linux/kde.c linux/xfce.c linux/gnome.c linux/deepin.c linux/mate.c linux/cinnamon.c linux/platforms.h
+libsetbackground_a_SOURCES += linux/kde.c linux/xfce.c linux/gnome.c linux/deepin.c linux/mate.c linux/cinnamon.c linux/lxde.c linux/platforms.h

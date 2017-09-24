@@ -13,6 +13,8 @@ enum _error {
     E_CINNAMON_FAIL = 8,
     E_DEEPIN_FAIL = 9,
     E_GNOME_FAIL = 10,
+    E_LXDE_PCMANFM_NOT_RUNNING = 11,
+    E_LXDE_FAIL = 12,
   };
 
 #endif /* __SETBACKGROUND_ERROR_H__ */

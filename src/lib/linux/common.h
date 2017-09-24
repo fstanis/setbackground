@@ -13,5 +13,7 @@ gchar* to_file_uri_path(const gchar* path);
 gchar* get_desktop_environment();
 gboolean file_exists(const gchar* path);
 gchar* get_real_path(const gchar* path);
+__pid_t find_pid_for_exe_path(const gchar* path);
+gchar** glob_path(const gchar* path);
 
 #endif /* __SETBACKGROUND_LINUX_COMMON_H__ */
