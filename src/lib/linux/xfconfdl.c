@@ -2,12 +2,13 @@
 
 #include <dlfcn.h>
 
-static const char* LIBXFCONF = "libxfconf-0.so";
+static const char* LIBXFCONF = "libxfconf-0.so.2";
 
 gboolean (*xfconf_init)(GError **error) = NULL;
 XfconfChannel* (*xfconf_channel_get)(const gchar *channel_name) = NULL;
 gboolean (*xfconf_channel_has_property)(XfconfChannel *channel, const gchar *property) = NULL;
 gboolean (*xfconf_channel_set_string)(XfconfChannel *channel, const gchar *property, const gchar *value) = NULL;
+gboolean (*xfconf_channel_set_int)(XfconfChannel *channel, const gchar *property, gint32 value) = NULL;
 
 // We load xfconf dynamically, to avoid having it a dependency on systems not
 // running XFCE.
@@ -25,6 +26,7 @@ gboolean libxfconf_try_load() {
   xfconf_channel_has_property = dlsym(libxfconf, "xfconf_channel_has_property");
   xfconf_channel_get = dlsym(libxfconf, "xfconf_channel_get");
   xfconf_channel_set_string = dlsym(libxfconf, "xfconf_channel_set_string");
+  xfconf_channel_set_int = dlsym(libxfconf, "xfconf_channel_set_int");
   return TRUE;
 }
 

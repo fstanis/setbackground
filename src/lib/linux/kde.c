@@ -14,12 +14,15 @@ static const char* SCRIPT_BASE =
     "d.wallpaperPlugin = 'org.kde.image';"
     "d.currentConfigGroup = ['Wallpaper', 'org.kde.image', 'General'];"
     "d.writeConfig('Image', '%s');"
+    "d.writeConfig('FillMode', '%d');"
     "});";
 
 static const char* PLASMASHELL_BUS = "org.kde.plasmashell";
 static const char* PLASMASHELL_PATH = "/PlasmaShell";
 static const char* PLASMASHELL_IFACE = "org.kde.PlasmaShell";
 static const char* PLASMASHELL_METHOD = "evaluateScript";
+
+static const int STYLE_CENTER = 6;
 
 DBusMessage* create_message(gchar** script) {
   DBusMessage* msg = dbus_message_new_method_call(
@@ -40,7 +43,7 @@ gchar* create_script(const gchar* path) {
     return NULL;
   }
   gchar* file_path = to_file_uri_path(path);
-  gchar* script = g_strdup_printf(SCRIPT_BASE, file_path);
+  gchar* script = g_strdup_printf(SCRIPT_BASE, file_path, STYLE_CENTER);
   g_free(file_path);
   return script;
 }

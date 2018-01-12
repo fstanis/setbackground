@@ -9,19 +9,25 @@ gboolean is_lxde(const gchar* desktop) {
   return g_strcmp0(desktop, DESKTOP) == 0 && file_exists(PCMANFM_PATH);
 }
 
+static inline gchar* pcmanfm_config_dir() {
+  return g_build_filename(g_get_user_config_dir(), "pcmanfm", "*", "desktop-items-*.conf", NULL);
+}
+
+static const char* CONF_GROUP = "*";
+static const char* CONF_KEY_IMAGE = "wallpaper";
+static const char* CONF_KEY_STYLE = "wallpaper_mode";
+static const char* STYLE_CENTER = "center";
+
 gboolean set_background_config(const gchar* config, const gchar* path) {
   GKeyFile* key_file = g_key_file_new();
   if (!g_key_file_load_from_file(key_file, config, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, NULL)) {
     return FALSE;
   }
-  g_key_file_set_string(key_file, "*", "wallpaper", path);
+  g_key_file_set_string(key_file, CONF_GROUP, CONF_KEY_IMAGE, path);
+  g_key_file_set_string(key_file, CONF_GROUP, CONF_KEY_STYLE, STYLE_CENTER);
   gboolean result = g_key_file_save_to_file(key_file, config, NULL);
   g_key_file_free(key_file);
   return result;
-}
-
-static inline gchar* pcmanfm_config_dir() {
-  return g_build_filename(g_get_user_config_dir(), "pcmanfm", "*", "desktop-items-*.conf", NULL);
 }
 
 int set_background_lxde(const gchar* path) {
