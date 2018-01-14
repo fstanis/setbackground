@@ -1,3 +1,6 @@
+// Copyright (c) 2017 Filip Stanis
+// This code is licensed under MIT license (see LICENSE for details)
+
 #include "setbackground.h"
 
 #ifdef __linux__ 

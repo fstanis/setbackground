@@ -1,3 +1,6 @@
+// Copyright (c) 2017 Filip Stanis
+// This code is licensed under MIT license (see LICENSE for details)
+
 #ifndef __SETBACKGROUND_LINUX_PLATFORMS_H__
 #define __SETBACKGROUND_LINUX_PLATFORMS_H__
 
