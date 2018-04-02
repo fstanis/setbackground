@@ -110,3 +110,30 @@ gchar** glob_path(const gchar* path) {
 
   return result;
 }
+
+static const char* DCONF_VALUE_STYLE_CENTER = "centered";
+static const char* DCONF_VALUE_STYLE_STRETCH = "stretched";
+static const char* DCONF_VALUE_STYLE_TILE = "wallpaper";
+
+int gnome_set_style(const gchar* key, int style) {
+  const gchar* value = NULL;
+  switch (style) {
+    case STYLE_CENTER:
+      value = DCONF_VALUE_STYLE_CENTER;
+      break;
+    case STYLE_STRETCH:
+      value = DCONF_VALUE_STYLE_STRETCH;
+      break;
+    case STYLE_TILE:
+      value = DCONF_VALUE_STYLE_TILE;
+      break;
+    default:
+      return E_UNSUPPORTED_STYLE;
+  }
+
+  if (!dconf_write(key, value)) {
+    return E_STYLE_FAIL;
+  }
+
+  return E_SUCCESS;
+}

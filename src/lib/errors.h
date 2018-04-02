@@ -18,7 +18,9 @@ enum _error {
     E_GNOME_FAIL = 10,
     E_LXDE_PCMANFM_NOT_RUNNING = 11,
     E_LXDE_FAIL = 12,
-    E_INVALID_FORMAT = 13
+    E_INVALID_FORMAT = 13,
+    E_UNSUPPORTED_STYLE = 14,
+    E_STYLE_FAIL = 15
   };
 
 #endif /* __SETBACKGROUND_ERROR_H__ */

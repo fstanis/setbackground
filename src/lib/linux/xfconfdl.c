@@ -15,7 +15,7 @@ gboolean (*xfconf_channel_set_int)(XfconfChannel *channel, const gchar *property
 
 // We load xfconf dynamically, to avoid having it a dependency on systems not
 // running XFCE.
-gboolean libxfconf_try_load() {
+static gboolean libxfconf_try_load() {
   static void* libxfconf = NULL;
   if (libxfconf) {
     return TRUE;

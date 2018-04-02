@@ -91,14 +91,20 @@ make
 The library exposes only a single function:
 
 ```C
-int set_background(const char* path);
+int set_background(const char* path, int style);
 ```
 
-The path is expected to be UTF8-encoded and it's recommended to always use
+`path` is expected to be UTF8-encoded and it's recommended to always use
 absolute paths, though relative paths are supported.
 
-On success, the desktop background is changed to the given image, style is set
-to "center" (if possible) and the function returns 0.
+`style` accepts the following values (defined in styles.h):
+
+-   `STYLE_CENTER`
+-   `STYLE_STRETCH`
+-   `STYLE_TILE`
+
+On success, the desktop background is changed to the given image with the
+selected style.
 
 On failure, one of the error codes defined in errors.h is returned.
 
@@ -130,4 +136,5 @@ the library can be used from e.g. Go with minimal effort this way.
 ## Platform caveats
 
 -   Windows XP only supports BMP images.
--   Deepin doesn't support changing the style (image will always be stretched).
+-   Deepin only supports `STYLE_STRETCH`.
+-   MacOS doesn't support `STYLE_TILE`.

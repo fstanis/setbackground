@@ -9,10 +9,19 @@
 @import Foundation.NSString;
 @import Foundation.NSURL;
 
+#include "styles.h"
 #include "errors.h"
 
-int set_background_darwin(const char* path) {
+static BOOL is_style_valid(int style) {
+  return style == STYLE_CENTER || style == STYLE_STRETCH;
+}
+
+int set_background_darwin(const char* path, int style) {
   @autoreleasepool {
+    if (!is_style_valid(style)) {
+      return E_UNSUPPORTED_STYLE;
+    }
+
     NSURL* image = [NSURL fileURLWithPath:[NSString stringWithUTF8String:path] isDirectory:NO];
     NSError* err;
     if ([image checkResourceIsReachableAndReturnError:&err] == NO) {
@@ -22,8 +31,13 @@ int set_background_darwin(const char* path) {
     NSScreen* screen = [NSScreen mainScreen];
 
     NSMutableDictionary *opts = [[sw desktopImageOptionsForScreen:screen] mutableCopy];
-    [opts setObject:[NSNumber numberWithInt:NSImageScaleNone] forKey:NSWorkspaceDesktopImageScalingKey];
-    [opts setObject:[NSNumber numberWithBool:NO] forKey:NSWorkspaceDesktopImageAllowClippingKey];
+    if (style == STYLE_CENTER) {
+      [opts setObject:[NSNumber numberWithInt:NSImageScaleNone] forKey:NSWorkspaceDesktopImageScalingKey];
+      [opts setObject:[NSNumber numberWithBool:NO] forKey:NSWorkspaceDesktopImageAllowClippingKey];
+    } else if (style == STYLE_STRETCH) {
+      [opts setObject:[NSNumber numberWithInt:NSImageScaleAxesIndependently] forKey:NSWorkspaceDesktopImageScalingKey];
+      [opts setObject:[NSNumber numberWithBool:YES] forKey:NSWorkspaceDesktopImageAllowClippingKey];
+    }
 
     bool success = [sw setDesktopImageURL:image forScreen:screen options:opts error:&err];
     if (!success) {

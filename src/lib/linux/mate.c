@@ -13,11 +13,11 @@ gboolean is_mate(const gchar* desktop) {
 
 static const char* DCONF_KEY_IMAGE = "/org/mate/desktop/background/picture-filename";
 static const char* DCONF_KEY_STYLE = "/org/mate/desktop/background/picture-options";
-static const char* STYLE_CENTER = "centered";
 
-int set_background_mate(const gchar* path) {
-  if (!dconf_write(DCONF_KEY_STYLE, STYLE_CENTER)) {
-    return E_MATE_FAIL;
+int set_background_mate(const gchar* path, int style) {
+  int result = gnome_set_style(DCONF_KEY_STYLE, style);
+  if (result != E_SUCCESS) {
+    return result;
   }
   if (!dconf_write(DCONF_KEY_IMAGE, path)) {
     return E_MATE_FAIL;

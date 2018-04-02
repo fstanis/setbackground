@@ -25,9 +25,24 @@ static const char* PLASMASHELL_PATH = "/PlasmaShell";
 static const char* PLASMASHELL_IFACE = "org.kde.PlasmaShell";
 static const char* PLASMASHELL_METHOD = "evaluateScript";
 
-static const int STYLE_CENTER = 6;
+static const int STYLE_VALUE_CENTER = 6;
+static const int STYLE_VALUE_STRETCH = 0;
+static const int STYLE_VALUE_TILE = 3;
 
-DBusMessage* create_message(gchar** script) {
+static int value_for_style(int style) {
+  switch (style) {
+    case STYLE_CENTER:
+      return STYLE_VALUE_CENTER;
+    case STYLE_STRETCH:
+      return STYLE_VALUE_STRETCH;
+    case STYLE_TILE:
+      return STYLE_VALUE_TILE;
+    default:
+      return -1;
+  }
+}
+
+static DBusMessage* create_message(gchar** script) {
   DBusMessage* msg = dbus_message_new_method_call(
       PLASMASHELL_BUS, PLASMASHELL_PATH, PLASMASHELL_IFACE, PLASMASHELL_METHOD);
   if (!msg) {
@@ -41,17 +56,17 @@ DBusMessage* create_message(gchar** script) {
   return NULL;
 }
 
-gchar* create_script(const gchar* path) {
+static gchar* create_script(const gchar* path, int style) {
   if (strchr(path, '\'') != NULL) {
     return NULL;
   }
   gchar* file_path = to_file_uri_path(path);
-  gchar* script = g_strdup_printf(SCRIPT_BASE, file_path, STYLE_CENTER);
+  gchar* script = g_strdup_printf(SCRIPT_BASE, file_path, style);
   g_free(file_path);
   return script;
 }
 
-int handle_error(DBusError* error) {
+static int handle_error(DBusError* error) {
   int result = E_KDE_FAIL;
   if (dbus_error_has_name(error, DBUS_ERROR_SERVICE_UNKNOWN)) {
     result = E_KDE_NO_PLASMASHELL;
@@ -62,13 +77,18 @@ int handle_error(DBusError* error) {
   return result;
 }
 
-int set_background_kde(const gchar* path) {
+int set_background_kde(const gchar* path, int style) {
+  int style_value = value_for_style(style);
+  if (style_value == -1) {
+    return E_UNSUPPORTED_STYLE;
+  }
+
   int result = E_KDE_FAIL;
 
   DBusError error;
   dbus_error_init(&error);
 
-  gchar* script = create_script(path);
+  gchar* script = create_script(path, style_value);
   if (!script) {
     return E_INVALID_PATH;
   }

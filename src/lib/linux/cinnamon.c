@@ -13,14 +13,13 @@ gboolean is_cinnamon(const gchar* desktop) {
 
 static const char* DCONF_KEY_IMAGE = "/org/cinnamon/desktop/background/picture-uri";
 static const char* DCONF_KEY_STYLE = "/org/cinnamon/desktop/background/picture-options";
-static const char* STYLE_CENTER = "centered";
 
-int set_background_cinnamon(const gchar* path) {
-  if (!dconf_write(DCONF_KEY_STYLE, STYLE_CENTER)) {
-    return E_CINNAMON_FAIL;
+int set_background_cinnamon(const gchar* path, int style) {
+  int result = gnome_set_style(DCONF_KEY_STYLE, style);
+  if (result != E_SUCCESS) {
+    return result;
   }
 
-  int result = E_SUCCESS;
   gchar* file_path  = to_file_uri_path(path);
   if (!dconf_write(DCONF_KEY_IMAGE, file_path)) {
     result = E_CINNAMON_FAIL;

@@ -19,21 +19,42 @@ static inline gchar* pcmanfm_config_dir() {
 static const char* CONF_GROUP = "*";
 static const char* CONF_KEY_IMAGE = "wallpaper";
 static const char* CONF_KEY_STYLE = "wallpaper_mode";
-static const char* STYLE_CENTER = "center";
 
-gboolean set_background_config(const gchar* config, const gchar* path) {
+static const char* CONF_VALUE_STYLE_CENTER = "center";
+static const char* CONF_VALUE_STYLE_STRETCH = "stretch";
+static const char* CONF_VALUE_STYLE_TILE = "tile";
+
+static const gchar* value_for_style(int style) {
+  switch (style) {
+    case STYLE_CENTER:
+      return CONF_VALUE_STYLE_CENTER;
+    case STYLE_STRETCH:
+      return CONF_VALUE_STYLE_STRETCH;
+    case STYLE_TILE:
+      return CONF_VALUE_STYLE_TILE;
+    default:
+      return NULL;
+  }
+}
+
+static gboolean set_background_config(const gchar* config, const gchar* path, const gchar* style) {
   GKeyFile* key_file = g_key_file_new();
   if (!g_key_file_load_from_file(key_file, config, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, NULL)) {
     return FALSE;
   }
   g_key_file_set_string(key_file, CONF_GROUP, CONF_KEY_IMAGE, path);
-  g_key_file_set_string(key_file, CONF_GROUP, CONF_KEY_STYLE, STYLE_CENTER);
+  g_key_file_set_string(key_file, CONF_GROUP, CONF_KEY_STYLE, style);
   gboolean result = g_key_file_save_to_file(key_file, config, NULL);
   g_key_file_free(key_file);
   return result;
 }
 
-int set_background_lxde(const gchar* path) {
+int set_background_lxde(const gchar* path, int style) {
+  const gchar* style_value = value_for_style(style);
+  if (!style_value) {
+    return E_UNSUPPORTED_STYLE;
+  }
+
   __pid_t pcmanfm_pid = find_pid_for_exe_path(PCMANFM_PATH);
   if (!pcmanfm_pid) {
     return E_LXDE_PCMANFM_NOT_RUNNING;
@@ -52,7 +73,7 @@ int set_background_lxde(const gchar* path) {
 
   gboolean success = TRUE;
   for (gchar** file = files; *file != NULL; file++) {
-    success &= set_background_config(*file, path);
+    success &= set_background_config(*file, path, style_value);
     g_free(*file);
   }
   g_free(files);

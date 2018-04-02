@@ -6,6 +6,6 @@
 
 #include <windows.h>
 
-BOOL legacy_set_wallpaper(const WCHAR* path);
+BOOL legacy_set_wallpaper(const WCHAR* path, int style);
 
 #endif /* __SETBACKGROUND_WINDOWS_LEGACY_H__ */

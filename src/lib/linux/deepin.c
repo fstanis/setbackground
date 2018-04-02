@@ -13,8 +13,11 @@ gboolean is_deepin(const gchar* desktop) {
 
 static const char* DCONF_KEY_IMAGE = "/com/deepin/wrap/gnome/desktop/background/picture-uri";
 
-// Deepin doesn't support changing the style to "center".
-int set_background_deepin(const gchar* path) {
+int set_background_deepin(const gchar* path, int style) {
+  if (style != STYLE_STRETCH) {
+    return E_UNSUPPORTED_STYLE;
+  }
+
   int result = E_SUCCESS;
   gchar* file_path  = to_file_uri_path(path);
   if (!dconf_write(DCONF_KEY_IMAGE, file_path)) {

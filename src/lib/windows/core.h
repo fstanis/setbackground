@@ -4,6 +4,6 @@
 #ifndef __SETBACKGROUND_WINDOWS_CORE_H__
 #define __SETBACKGROUND_WINDOWS_CORE_H__
 
-int set_background_windows(const char* path);
+int set_background_windows(const char* path, int style);
 
 #endif /* __SETBACKGROUND_WINDOWS_CORE_H__ */
